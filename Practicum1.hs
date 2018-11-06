@@ -242,9 +242,13 @@ insertionsort (x:xs) = insert x (insertionsort xs)
 
 -- Exercise 18
 quicksort :: Ord a => [a] -> [a]
-quicksort = undefined
+quicksort [] = []
+quicksort(x:xs) = myappend (quicksort smaller) (x: quicksort larger)
+   where smaller = filter (<= x) xs
+         larger  = filter (> x) xs
 
-
+--quicksort [3,9,34,2.8888,4,1,8,0,222] = [0.0,1.0,2.8888,3.0,4.0,8.0,9.0,34.0,222.0]
+--quickort[9,8,7,6,5,4,3,2,1] = [1,2,3,4,5,6,7,8,9]
 
 
 
