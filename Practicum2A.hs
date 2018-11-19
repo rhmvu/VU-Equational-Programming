@@ -190,31 +190,42 @@ treemap func Leaf = Leaf
 -- -------------------------
 -- Exercises Binary Search Trees
 -- -------------------------
-{-
+
 -- Exercise 1
 smallerthan :: (Ord a) => a -> BinaryTree a -> Bool
-smallerthan = undefined
+smallerthan ref (Node left val right) = ref < val && (smallerthan ref left) && (smallerthan ref right)
+smallerthan ref Leaf = True
 
 largerthan :: (Ord a) => a -> BinaryTree a -> Bool
-largerthan = undefined
+largerthan ref (Node left val right) = ref > val && (largerthan ref left) && (largerthan ref right)
+largerthan ref Leaf = True
 
 -- Exercise 2
 isbinarysearchtree :: (Ord a) => BinaryTree a -> Bool
-isbinarysearchtree = undefined
+isbinarysearchtree (Node left val right) = (largerthan val left) && (smallerthan val right) && isbinarysearchtree left && isbinarysearchtree right
+isbinarysearchtree Leaf = True 
 
 -- Exercise 3
 iselement :: (Ord a, Eq a) => a -> BinaryTree a -> Bool
-iselement = undefined
+iselement ref (Node left val right)
+  | ref == val = True
+  | ref < val = iselement ref left
+  | otherwise = iselement ref right
+iselement ref Leaf = False
 
 -- Exercise 4
 insert :: (Ord a, Eq a) => a -> BinaryTree a -> BinaryTree a
-insert = undefined
+insert new Leaf = Node Leaf new Leaf
+insert new (Node left val right)
+  | new == val = (Node left val right)
+  | new < val =  (Node (insert new left) val (right))
+  | otherwise = (Node (left) val (insert new right))
 
 -- Exercise 5
 createbinarysearchtree :: (Ord a, Eq a) => [a] -> BinaryTree a
-createbinarysearchtree = undefined
+createbinarysearchtree (x:xs) =  undefined
 
 -- Exercise 6
 remove :: (Ord a, Eq a) => a -> BinaryTree a -> BinaryTree a
 remove = undefined
--}
+
