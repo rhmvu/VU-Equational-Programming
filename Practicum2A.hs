@@ -102,41 +102,47 @@ churchnumeral n =
 backtointeger :: (Num a) => ChurchNumeral -> a
 backtointeger cn = cn (+1) 0
 
-{- Show usage here -}
+{- 6 == backtointeger (churchnumeral 6) -}
 
 
-{-
+
 -- Exercise 2
 churchequality ::  ChurchNumeral  -> ChurchNumeral  -> Bool
-churchequality = undefined
-
+churchequality x y = backtointeger x == backtointeger y
+ 
 -- Exercise 3
 successor ::  ChurchNumeral -> ChurchNumeral
-successor = undefined
- 
+successor x = churchnumeral ((backtointeger x)+1)
+
+--backtointeger(successor (churchnumeral 6)) == 7
+
+
 -- Exercise 4
 successorb :: ChurchNumeral -> ChurchNumeral
-successorb = undefined
+successorb = (\x -> \s -> \z -> x s (s z))
+
+--backtointeger(successorb (churchnumeral 6)) == 7
+
 
 -- Exercise 5
 apply1 :: (Eq a, Num a) => (ChurchNumeral-> ChurchNumeral) ->  a -> a
-apply1 f n =  undefined
+apply1 f n =  backtointeger(f (churchnumeral n))
+
 
 -- Exercise 6
 addition :: ChurchNumeral -> ChurchNumeral -> ChurchNumeral
-addition = undefined
+addition x y = (\z -> (x z).(y z)) 
 
 multiplication ::  ChurchNumeral -> ChurchNumeral -> ChurchNumeral
-multiplication = undefined
-
+multiplication x y = (\z -> (x z)) . (\z -> (y z))
+{-
 exponentiation ::  ChurchNumeral -> ChurchNumeral -> ChurchNumeral 
-exponentiation = undefined
+exponentiation x y = \x.y. churchsy z 
 
 -- Exercise 7
 apply2 :: (Eq a, Num a) => (ChurchNumeral -> ChurchNumeral -> ChurchNumeral) -> a -> a -> a
-apply2  = undefined
-
-
+apply2  = undefined  
+-}
 -- ---------------------
 -- Exercises Binary Trees
 -- ---------------------
@@ -145,32 +151,46 @@ data BinaryTree a = Leaf | Node (BinaryTree a) a (BinaryTree a)
 
 -- Exercise 1
 numberofnodes :: BinaryTree a -> Integer
-numberofnodes = undefined
+numberofnodes (Node x y z) = 1 + numberofnodes x + numberofnodes z
+numberofnodes Leaf = 0
+
+exampletree1 = Node Leaf 0 Leaf
+exampletree2 = (Node (Node Leaf 1 Leaf ) 0 (Node Leaf 3 Leaf))
+exampletree3 = (Node (Node Leaf 1 Leaf) 6 (Node Leaf 8 Leaf))
 
 -- Exercise 2
 height :: BinaryTree a -> Integer
-height = undefined
+height (Node x y z) 
+  | (height x > height z) = 1 + height x
+  | otherwise =  1 + height z 
+height Leaf = 0
 
 -- Exercise 3
 sumnodes :: (Num a) => BinaryTree a -> a
-sumnodes = undefined
+sumnodes (Node left val right) = val+ sumnodes left + sumnodes right
+sumnodes Leaf = 0 
+
 
 -- Exercise 4
 mirror :: BinaryTree a -> BinaryTree a
-mirror = undefined
+mirror (Node left val right) = Node (mirror right) val (mirror left)
+mirror Leaf = Leaf
 
 -- Exercise 5
 flatten :: BinaryTree a -> [a]
-flatten = undefined
+flatten (Node left val right) = (flatten left) ++ [val] ++ (flatten right)
+flatten Leaf = []
 
 -- Exercise 6
 treemap :: (a -> b) -> BinaryTree a -> BinaryTree b
-treemap = undefined
+treemap func (Node left val right)  = Node (treemap func left) (func val) (treemap func right) 
+treemap func Leaf = Leaf
+
 
 -- -------------------------
 -- Exercises Binary Search Trees
 -- -------------------------
-
+{-
 -- Exercise 1
 smallerthan :: (Ord a) => a -> BinaryTree a -> Bool
 smallerthan = undefined
@@ -197,6 +217,4 @@ createbinarysearchtree = undefined
 -- Exercise 6
 remove :: (Ord a, Eq a) => a -> BinaryTree a -> BinaryTree a
 remove = undefined
-
 -}
-
