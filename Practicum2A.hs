@@ -223,9 +223,38 @@ insert new (Node left val right)
 
 -- Exercise 5
 createbinarysearchtree :: (Ord a, Eq a) => [a] -> BinaryTree a
-createbinarysearchtree (x:xs) =  undefined
+createbinarysearchtree (x:xs) = createbst xs (Node Leaf x Leaf)
+createbinarysearchtree [] = Leaf
+
+
+createbst :: (Ord a, Eq a) => [a] -> BinaryTree a -> BinaryTree a
+createbst (x:xs) (Node left val right) = createbst xs (insert x (Node left val right))
+createbst [] (Node left val right) = (Node left val right)
+--isbinarysearchtree (createbinarysearchtree [1,2,3,4,5,6,7,8,9]) == True
 
 -- Exercise 6
 remove :: (Ord a, Eq a) => a -> BinaryTree a -> BinaryTree a
-remove = undefined
+remove x (Leaf) = Leaf
+remove x (Node left val right)
+  | x > val = (Node left val (remove x right))  --remove from right if removal value higher than value of the node
+  | x < val = (Node (remove x left) val right) --remove from left if removal value lower than value of the node
+  | (left == Leaf) && (right == Leaf) =  Leaf --On node without children return leaf
+  | right == Leaf = left                       -- When right is a leaf replace this node by left
+  | left == Leaf = right                       --  when left is a leaf replace this node by right
+  | otherwise = Node (left) (successorval) (remove (successorval) (right))  --When both children get successor node val remove it and make current val successor val
+  where  successornode = getsuccessornode right
+         successorval = (nodeval successornode)
+       
+
+getsuccessornode :: (Ord a, Eq a) => BinaryTree a -> BinaryTree a
+getsuccessornode (Node left val right)
+  | getsuccessornode left == Leaf = (Node Leaf val Leaf) -- On last node return that node
+  | otherwise = getsuccessornode (left) --Try to go most to the left to get smallest from the right of the inital node
+getsuccessornode (Leaf) = Leaf
+
+
+nodeval :: BinaryTree a -> a
+nodeval (Node x val z) = val 
+
+--isbinarysearchtree (remove 8 exampletree3)
 
