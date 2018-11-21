@@ -207,6 +207,12 @@ gPerfect x y z s = do
 
 -- Exercise 4
 v3 :: Double -> Double -> Double -> Double -> MaybeOne Double
-v3 x y z s = undefined
-
-
+v3 x y z s = do
+  xDividedByy <- x // y
+  zDividedBys <- z // s
+  yDividedBys <- y // s
+  firstBlock  <- xDividedByy // (zDividedBys - yDividedBys)
+  zDividedByx <- z // x
+  let secondBlock = yDividedBys + zDividedByx
+  return (firstBlock - secondBlock)
+  
