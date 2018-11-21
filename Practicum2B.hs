@@ -1,15 +1,14 @@
 module Practicum2B where
 
 {-
-Name:           <Name and family name>
-VU-net id:      <VU-net id>
-Student number: <Student number>
+Name:            Ruben van der Ham
+VU-net id:       rhm270
+Student number:  2592271
 Discussed with: <In case you discussed the exercises with someone else,
                  please mention his/her name(s) explicitly here>
 Remarks:        <In case something need special attention,
                  please tell us>
-Sources:        <in case you used sources such as books or webpages
-                 please mention them here>
+Sources:        
 -}
 
 import Control.Applicative (Applicative(..))
@@ -42,11 +41,23 @@ myDividedBy n d =
 
 -- Exercise 1-a
 myIndexOf :: [Double] -> Double -> MaybeOne Int
-myIndexOf l n = undefined
+myIndexOf l n = myIndexOfAux l n 1
+
+myIndexOfAux :: [Double] -> Double -> Int -> MaybeOne Int
+myIndexOfAux (x:xs) n index =
+  if x == n
+    then Result index
+  else
+    myIndexOfAux xs n (index+1)
+myIndexOfAux [] n index = NoResult
 
 -- Exercise 1-b
 myRemainderString :: String -> String -> MaybeOne String
-myRemainderString x y = undefined
+myRemainderString (x:xs) (y:ys)
+  | x == y = myRemainderString xs ys
+  | otherwise = NoResult
+
+myRemainderString [] y = Result y
 
 -- Create an operator for our divide function
 n // d = n `myDividedBy` d
@@ -88,7 +99,25 @@ g x y z s =
 
 -- Exercise 2
 v1 :: Double -> Double -> Double -> Double -> MaybeOne Double
-v1 x y z s = undefined
+v1 x y z s =
+  case x // y of
+    NoResult           -> NoResult
+    Result xDividedByy ->
+      case z // s of
+        NoResult           -> NoResult
+        Result zDividedBys ->
+           case y // s of
+             NoResult           -> NoResult
+             Result yDividedBys ->
+               case xDividedByy // (zDividedBys-yDividedBys) of
+                 NoResult           -> NoResult
+                 Result firstBlock ->
+                   case z // x of
+                     NoResult       -> NoResult
+                     Result zDividedByx ->
+                       let secondBlock = (yDividedBys + zDividedByx) 
+                         in Result(firstBlock - secondBlock)
+
 
 -- Example f using >==
 fBetter :: Double -> Double -> Double -> MaybeOne Double
@@ -119,8 +148,26 @@ gBetter x y z s =
   )
 
 -- Exercise 3
+
 v2 :: Double -> Double -> Double -> Double -> MaybeOne Double
-v2 x y z s = undefined
+v2 x y z s =
+  (x // y) >>=
+    (\xDividedByy -> 
+      (z // s) >>=
+        (\zDividedBys ->
+        (y // s) >>=
+          (\yDividedBys ->
+           (xDividedByy // (zDividedBys - yDividedBys)) >>=
+             (\firstBlock ->
+               (z // x) >>=
+                 (\zDividedByx ->
+                   let secondBlock = yDividedBys + zDividedByx
+                   in Result (firstBlock - secondBlock)
+                 )
+             )
+         )      
+       )
+   )
 
 -- Example f using do
 fDo :: Double -> Double -> Double -> MaybeOne Double
