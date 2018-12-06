@@ -42,11 +42,17 @@ defaultOptions  = Options
 
 -- | Algorithm implementation
 nextGeneration :: World -> World
-nextGeneration w = undefined
+nextGeneration w = S.union (newCells n) (aliveCells a)
+
 
 -- | Helper functions
--- deadCells :: World -> World
--- deadCells w = undefined
+
+aliveCells a = S.filter (\x -> (neighborCountIn x a == 2) || (neighborCountIn x a == 3) ) a
+
+newCells n = S.filter (\x -> neighborCountIn x n == 3)((S.foldr (\x-> \y-> S.union (neighbors x) y) S.empty n) S.\\ n)
+
+
+
 
 neighborCountIn :: Cell -> World -> Int
 neighborCountIn c w = size
